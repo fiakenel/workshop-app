@@ -249,12 +249,12 @@ class ClientForm(tk.Frame):
         back_button.grid(row=9, column=0, pady=20)
 
     def submit(self):
-        self.check_firstname()
-        self.check_lastname()
-        self.check_middlename()
-        self.check_phone()
+        self.validate_firstname()
+        self.validate_lastname()
+        self.validate_middlename()
+        self.validate_phone()
 
-    def check_firstname(self):
+    def validate_firstname(self):
         firstname = self.firstname.get()
         is_ok = False
         message = ''
@@ -270,7 +270,7 @@ class ClientForm(tk.Frame):
         self.firstname_error.config(text=message, fg='red', width=len(message))
         return is_ok
 
-    def check_lastname(self):
+    def validate_lastname(self):
         lastname = self.lastname.get()
         is_ok = False
         message = ''
@@ -286,7 +286,7 @@ class ClientForm(tk.Frame):
         self.lastname_error.config(text=message, fg='red', width=len(message))
         return is_ok
 
-    def check_middlename(self):
+    def validate_middlename(self):
         middlename = self.middlename.get()
         is_ok = False
         message = ''
@@ -300,7 +300,7 @@ class ClientForm(tk.Frame):
         self.middlename_error.config(text=message, fg='red', width=len(message))
         return is_ok
 
-    def check_phone(self):
+    def validate_phone(self):
         phone = self.phone.get()
         is_ok = False
         message = ''
