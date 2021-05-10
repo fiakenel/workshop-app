@@ -185,15 +185,16 @@ class ClientForm(tk.Frame):
                       'fg' : '#212121',
                       'anchor' : 'w'}
 
-        #last name label and  entry
+        #last name label and entry
         label_lastname = tk.Label(entry_frame, label_args, text='Прізвище:*')
         label_lastname.grid(row=0, column=0)
 
-        self.lastname_error = tk.Label(entry_frame, label_args)
-        self.lastname_error.grid(row=1, column=1)
-
         self.lastname = tk.Entry(entry_frame)
         self.lastname.grid(row=1, column=0)
+
+        #last name error label
+        self.lastname_error = tk.Label(entry_frame, label_args)
+        self.lastname_error.grid(row=1, column=1)
 
         #first name label and entry
         label_firstname = tk.Label(entry_frame, label_args, text='Ім\'я:*')
@@ -202,6 +203,10 @@ class ClientForm(tk.Frame):
         self.firstname = tk.Entry(entry_frame)
         self.firstname.grid(row=3, column=0)
 
+        #first mane error label
+        self.firstname_error = tk.Label(entry_frame, label_args)
+        self.firstname_error.grid(row=3, column=1)
+
         #middle name label and entry
         label_middlename = tk.Label(entry_frame, label_args, text='По батькові:')
         label_middlename.grid(row=4, column=0)
@@ -209,12 +214,20 @@ class ClientForm(tk.Frame):
         self.middlename = tk.Entry(entry_frame)
         self.middlename.grid(row=5, column=0)
 
+        #middle name error label
+        self.middlename_error = tk.Label(entry_frame, label_args)
+        self.middlename_error.grid(row=5, column=1)
+
         #phone label and entry
         label_phone = tk.Label(entry_frame, label_args, text='Телефон:*')
         label_phone.grid(row=6, column=0)
 
         self.phone = tk.Entry(entry_frame)
         self.phone.grid(row=7, column=0)
+
+        #phone error label
+        self.phone_error = tk.Label(entry_frame, label_args)
+        self.phone_error.grid(row=7, column=1)
 
         button_args = {'bg' : '#7C4DFF',
                         'border': 0,
@@ -236,10 +249,27 @@ class ClientForm(tk.Frame):
         back_button.grid(row=9, column=0, pady=20)
 
     def submit(self):
-        #self.check_firstname()
+        self.check_firstname()
         self.check_lastname()
-        #self.check_middlename()
+        self.check_middlename()
         self.check_phone()
+
+    def check_firstname(self):
+        firstname = self.firstname.get()
+        is_ok = True
+        message = ''
+        if(not firstname.isalpha()):
+            message = 'Дозволені лише літери'
+            is_ok = False
+        if(len(firstname) > 50):
+            is_ok = False
+            message = 'Ваше прізвище занадто довге'
+        if(len(firstname) == 0):
+            is_ok = False
+            message = 'Введіть прізвище'
+
+        self.firstname_error.config(text=message, fg='red', width=len(message))
+        return True
 
     def check_lastname(self):
         lastname = self.lastname.get()
