@@ -256,38 +256,38 @@ class ClientForm(tk.Frame):
 
     def check_firstname(self):
         firstname = self.firstname.get()
-        is_ok = True
+        is_ok = False
         message = ''
-        if(not firstname.isalpha()):
-            message = 'Дозволені лише літери'
-            is_ok = False
-        if(len(firstname) > 50):
-            is_ok = False
-            message = 'Ваше прізвище занадто довге'
         if(len(firstname) == 0):
-            is_ok = False
-            message = 'Введіть прізвище'
+            message = 'Введіть ім\'я'
+        elif(len(firstname) > 50):
+            message = 'Ваше ім\'я занадто довге'
+        elif(not firstname.isalpha()):
+            message = 'Дозволені лише літери'
+        else:
+            is_ok = True
 
         self.firstname_error.config(text=message, fg='red', width=len(message))
-        return True
+        return is_ok
 
     def check_lastname(self):
         lastname = self.lastname.get()
-        is_ok = True
+        is_ok = False
         message = ''
-        if(not lastname.isalpha()):
-            message = 'Дозволені лише літери'
-            is_ok = False
-        if(len(lastname) > 50):
-            is_ok = False
-            message = 'Ваше прізвище занадто довге'
         if(len(lastname) == 0):
-            is_ok = False
             message = 'Введіть прізвище'
+        elif(len(lastname) > 50):
+            message = 'Ваше прізвище занадто довге'
+        elif(not lastname.isalpha()):
+            message = 'Дозволені лише літери'
+        else:
+            is_ok = True
 
         self.lastname_error.config(text=message, fg='red', width=len(message))
-        return True
+        return is_ok
 
+    def check_middlename(self):
+        pass
     def check_phone(self):
         pass
 
