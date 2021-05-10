@@ -287,9 +287,36 @@ class ClientForm(tk.Frame):
         return is_ok
 
     def check_middlename(self):
-        pass
+        middlename = self.middlename.get()
+        is_ok = False
+        message = ''
+        if(len(middlename) > 50):
+            message = 'Ваше по батькові занадто довге'
+        elif(not middlename.isalpha() and len(middlename) != 0):
+            message = 'Дозволені лише літери'
+        else:
+            is_ok = True
+
+        self.middlename_error.config(text=message, fg='red', width=len(message))
+        return is_ok
+
     def check_phone(self):
-        pass
+        phone = self.phone.get()
+        is_ok = False
+        message = ''
+        if(len(phone) == 0):
+            message = 'Введіть номер'
+        elif(len(phone) > 10):
+            message = 'Ваш телефон занадто довгий'
+        elif(len(phone) < 4):
+            message = 'Ваш телефон занадто короткий'
+        elif(not phone.isdecimal()):
+            message = 'Дозволені лише числа'
+        else:
+            is_ok = True
+
+        self.phone_error.config(text=message, fg='red', width=len(message))
+        return is_ok
 
 
 
