@@ -18,11 +18,11 @@ class MyApp(tk.Tk):
         self.config(menu=menu)
         add_menu = tk.Menu(menu, tearoff=0)
         menu.add_cascade(label='Додати', menu=add_menu)
-        add_menu.add_command(label='Клієнт')
-        add_menu.add_command(label='Замовлення')
-        add_menu.add_command(label='Деталі')
-        add_menu.add_command(label='Прайс-лист')
-        add_menu.add_command(label='Майстер')
+        add_menu.add_command(label='Клієнт', command=lambda:self.show_frame('ClientForm'))
+        add_menu.add_command(label='Замовлення', command=lambda:self.show_frame('OrderForm'))
+        add_menu.add_command(label='Деталі', command=lambda:self.show_frame('DetailsForm'))
+        add_menu.add_command(label='Прайс-лист', command=lambda:self.show_frame('PricelistForm'))
+        add_menu.add_command(label='Майстер', command=lambda:self.show_frame('MasterForm'))
         add_menu.add_separator()
         add_menu.add_command(label='Вийти', command=self.quit)
 
@@ -31,7 +31,7 @@ class MyApp(tk.Tk):
         info_menu.add_command(label='Про нас')
 
         self.frames = {}
-        for F in (StartPage, ClientForm, OrderForm):
+        for F in (StartPage, ClientForm):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -58,7 +58,7 @@ class StartPage(tk.Frame):
         self.controller.iconphoto(False, tk.PhotoImage(file='spanner.png'))
 
         # Top frame for main label and icon
-        top_frame = tk.Frame(self, borderwidth=40, bg='#9E9E9E')
+        top_frame = tk.Frame(self, borderwidth=10, bg='#9E9E9E')
         top_frame.pack(fill='x', side='top')
 
         #icon
@@ -69,14 +69,14 @@ class StartPage(tk.Frame):
 
         #main label
         heading_label = tk.Label(top_frame,
-                                 text='Майстерня "у Івана"',
+                                 text=' Майстерня "у Івана"',
                                  font=('dejavu sans mono',40),
-                                 pady=20,
+                                 pady=15,
                                  fg='#212121',
                                  bg='#9E9E9E')
-        heading_label.pack()
+        heading_label.pack(side="top")
 
-        #label above the buttons
+        #label bellow main label
         selection_label = tk.Label(self,
                                    text='Переглянути дані:',
                                    font=('dejavu sans mono',20),
@@ -89,7 +89,7 @@ class StartPage(tk.Frame):
         button_frame = tk.Frame(self, bg='#F5F5F5')
         button_frame.pack(fill='both', expand=True)
 
-        buttons_args = {'bg' : '#7C4DFF',
+        button_args = {'bg' : '#7C4DFF',
                         'border': 0,
                         'fg' : 'white',
                         'width' : 30,
@@ -98,35 +98,35 @@ class StartPage(tk.Frame):
                         }
         #client button
         button_client = tk.Button(button_frame,
-                                  buttons_args,
+                                  button_args,
                                   command=lambda:controller.show_frame('ClientInfo'),
                                   text='Клієнти')
         button_client.grid(row=0, column=0, pady=5)
 
         #order button
         button_order = tk.Button(button_frame,
-                                  buttons_args,
+                                  button_args,
                                   command=lambda:controller.show_frame('OrderInfo'),
                                   text='Замовлення')
         button_order.grid(row=1, column=0, pady=5)
 
         #details button
         button_details = tk.Button(button_frame,
-                                  buttons_args,
+                                  button_args,
                                   command=lambda:controller.show_frame('DetailsInfo'),
                                   text='Деталі замовлення')
         button_details.grid(row=2, column=0, pady=5)
 
         #priselist button
         button_pricelist = tk.Button(button_frame,
-                                  buttons_args,
+                                  button_args,
                                   command=lambda:controller.show_frame('PricelistInfo'),
                                   text='Прайс-листи')
         button_pricelist.grid(row=3, column=0, pady=5)
 
         #master button
         button_master = tk.Button(button_frame,
-                                  buttons_args,
+                                  button_args,
                                   command=lambda:controller.show_frame('MasterInfo'),
                                   text='Майстри')
         button_master.grid(row=4, column=0, pady=5)
@@ -136,7 +136,7 @@ class StartPage(tk.Frame):
 
         #request button
         button_requests = tk.Button(button_frame,
-                                  buttons_args,
+                                  button_args,
                                   command=lambda:controller.show_frame('RequestsPage'),
                                   text='Запити')
         button_requests.grid(row=6, column=0, pady=5)
@@ -146,6 +146,103 @@ class ClientForm(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+
+        # Top frame for main label and icon
+        top_frame = tk.Frame(self, borderwidth=10, bg='#9E9E9E')
+        top_frame.pack(fill='x', side='top')
+
+        #icon
+        icon = tk.PhotoImage(file='spanner.png')
+        icon_label = tk.Label(top_frame, image=icon, bg='#9E9E9E')
+        icon_label.pack(side='left')
+        icon_label.image = icon
+
+        #main label
+        heading_label = tk.Label(top_frame,
+                                 text=' Додати клієнта',
+                                 font=('dejavu sans mono',40),
+                                 pady=15,
+                                 fg='#212121',
+                                 bg='#9E9E9E')
+        heading_label.pack()
+
+        #label bellow main label
+        selection_label = tk.Label(self,
+                                   text='Введіть дані:',
+                                   font=('dejavu sans mono',20),
+                                   bg='#BDBDBD',
+                                   fg='white',
+                                   anchor='w')
+        selection_label.pack(fill='x')
+
+        #frame for entries
+        entry_frame = tk.Frame(self, bg='#F5F5F5')
+        entry_frame.pack(fill='both', expand=True)
+
+        label_args = {'font' : ('dejavu sans mono', 10),
+                      'bg' : '#F5F5F5',
+                      'width' : 20,
+                      'fg' : '#212121',
+                      'anchor' : 'w'}
+
+        #last name label and  entry
+        label_lastname = tk.Label(entry_frame, label_args, text='Прізвище:*')
+        label_lastname.grid(row=0, column=0)
+
+        self.lastname = tk.Entry(entry_frame)
+        self.lastname.grid(row=1, column=0)
+
+        #first name label and entry
+        label_firstname = tk.Label(entry_frame, label_args, text='Ім\'я:*')
+        label_firstname.grid(row=2, column=0)
+
+        self.firstname = tk.Entry(entry_frame)
+        self.firstname.grid(row=3, column=0)
+
+        #middle name label and entry
+        label_middlename = tk.Label(entry_frame, label_args, text='По батькові:')
+        label_middlename.grid(row=4, column=0)
+
+        self.middlename = tk.Entry(entry_frame)
+        self.middlename.grid(row=5, column=0)
+
+        #phone label and entry
+        label_phone = tk.Label(entry_frame, label_args, text='Телефон:*')
+        label_phone.grid(row=6, column=0)
+
+        self.phone = tk.Entry(entry_frame)
+        self.phone.grid(row=7, column=0)
+
+        button_args = {'bg' : '#7C4DFF',
+                        'border': 0,
+                        'fg' : 'white',
+                        'width' : 20,
+                        'height' : 2,
+                        'font' : ('dejavu sans mono',10)
+                        }
+
+        submit_button= tk.Button(entry_frame,
+                                  button_args,
+                                  command=lambda:self.submit(),
+                                  text='Зберегти')
+        submit_button.grid(row=8, column=0, pady=10)
+        back_button= tk.Button(entry_frame,
+                                  button_args,
+                                  command=lambda:controller.show_frame('StartPage'),
+                                  text='Повернутись до меню')
+        back_button.grid(row=9, column=0, pady=20)
+
+        def submit(self):
+            check_name()
+            check_phone()
+
+        def check_name():
+            self.lastname_error.text='Помилка!'
+            self.lastname_error.fg='red'
+
+        def check_phone(self):
+            pass
+
 
 
 class OrderForm(tk.Frame):
