@@ -1,4 +1,5 @@
 import tkinter as tk
+
 class ClientForm(tk.Frame):
 
     def __init__(self, parent, controller):
