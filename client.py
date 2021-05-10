@@ -1,4 +1,5 @@
 import tkinter as tk
+from dbconn import cur
 
 class ClientForm(tk.Frame):
 
@@ -171,8 +172,13 @@ class ClientForm(tk.Frame):
             message = 'Ваш телефон занадто короткий'
         elif(not phone.isdecimal()):
             message = 'Дозволені лише числа'
+        elif(has_phone(phone)):
+            message = 'Клієнт з таким номером вже існує'
         else:
             is_ok = True
 
         self.phone_error.config(text=message, fg='red', width=len(message))
         return is_ok
+def has_phone(phone):
+    cur.execute('SELECT EXISTS(SELECT 1 FROM clients WHERE phone = %s);', [phone])
+    return cur.fetchone()[0]
