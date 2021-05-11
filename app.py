@@ -2,6 +2,7 @@ import tkinter as tk
 import psycopg2
 from startpage import *
 from client import *
+from order import *
 
 class MyApp(tk.Tk):
 
@@ -33,7 +34,7 @@ class MyApp(tk.Tk):
         info_menu.add_command(label='Про нас')
 
         self.frames = {}
-        for F in (StartPage, ClientForm, ClientInfo):
+        for F in (StartPage, ClientForm, ClientInfo, OrderForm):
             page_name = F.__name__
             frame = F(parent=container, controller=self, conn=conn)
             self.frames[page_name] = frame
