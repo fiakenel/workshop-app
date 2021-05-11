@@ -306,8 +306,12 @@ class ClientInfo(tk.Frame):
         text_frame = tk.Frame(middle_frame, bg='#F5F5F5')
         text_frame.pack(fill='both', side='right', expand=True)
 
-        self.text_info = tk.Text(text_frame, state='disabled', height=4, font=('dejavu sans mono', 12))
-        self.text_info.grid(row=0, column=1, padx=10, pady=10)
+        self.text_label = tk.Label(text_frame,
+                                   width=60,
+                                   font=('dejavu sans mono', 12),
+                                   fg='#212121',
+                                   bg='#F5F5F5')
+        self.text_label.grid(row=0, column=1, padx=10, pady=10, sticky='w')
 
         self.phone_listbox = tk.Listbox(text_frame,
                                         selectmode='single',
@@ -321,17 +325,12 @@ class ClientInfo(tk.Frame):
         selected = self.phone_listbox.curselection()
         phone = self.phone_listbox.get(selected)
         self.controller.show_frame('ClientForm', phone)
-        self.delete_text()
+        self.text_label.config(text='')
         self.cover_frame.tkraise()
-
-    def delete_text(self):
-        self.text_info.config(state='normal')
-        self.text_info.delete(1.0, tk.END)
-        self.text_info.config(state='disabled')
 
     def return_clicked(self):
         self.controller.show_frame('StartPage')
-        self.delete_text()
+        self.text_label.config(text='')
         self.cover_frame.tkraise()
 
     def update_data(self):
@@ -355,14 +354,14 @@ class ClientInfo(tk.Frame):
             cur.close()
 
             self.phone_listbox.delete(selected)
-            self.delete_text()
+            self.text_label.config(text='')
 
 
     def phone_listbox_selected(self):
         self.button_frame.tkraise()
-        self.update_text_info()
+        self.update_text_label()
 
-    def update_text_info(self):
+    def update_text_label(self):
         text = ''
         selected = self.phone_listbox.curselection()
         if selected:
@@ -370,10 +369,7 @@ class ClientInfo(tk.Frame):
             (phone, lastname, firstname, middlename) = self.get_client_info(phone)
             text = f"Телефон: {phone}\nПрізвище: {lastname}\nІм'я: {firstname}\nПо батькові: {middlename}"
 
-        self.text_info.config(state='normal')
-        self.text_info.delete(1.0, tk.END)
-        self.text_info.insert(tk.INSERT, text)
-        self.text_info.config(state='disabled')
+        self.text_label.config(text=text)
 
     def get_client_info(self, phone):
         cur = self.conn.cursor()
