@@ -202,3 +202,10 @@ class ClientForm(tk.Frame):
         cur = self.conn.cursor()
         cur.execute('SELECT EXISTS(SELECT 1 FROM clients WHERE phone = %s);', [phone])
         return cur.fetchone()[0]
+
+class ClientInfo(tk.Frame):
+
+    def __init__(self, parent, controller, conn, **kwargs):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.conn = conn

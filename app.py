@@ -1,7 +1,7 @@
 import tkinter as tk
+import psycopg2
 from startpage import *
 from client import *
-import psycopg2
 
 class MyApp(tk.Tk):
 
@@ -33,7 +33,7 @@ class MyApp(tk.Tk):
         info_menu.add_command(label='Про нас')
 
         self.frames = {}
-        for F in (StartPage, ClientForm):
+        for F in (StartPage, ClientForm, ClientInfo):
             page_name = F.__name__
             frame = F(parent=container, controller=self, conn=conn)
             self.frames[page_name] = frame
@@ -49,13 +49,6 @@ class MyApp(tk.Tk):
         '''Show a frame for the given page name'''
         frame = self.frames[page_name]
         frame.tkraise()
-
-class OrderForm(tk.Frame):
-
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-        self.controller = controller
-
 
 if __name__ == "__main__":
     conn = psycopg2.connect(host='localhost',
