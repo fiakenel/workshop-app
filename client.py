@@ -117,6 +117,8 @@ class ClientForm(tk.Frame):
 
     def return_clicked(self):
         self.controller.show_frame('StartPage')
+        self.phone.config(state='normal')
+        self.editmode = False
         self.clear_entries()
 
     def clear_entries(self):
