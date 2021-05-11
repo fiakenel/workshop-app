@@ -256,7 +256,7 @@ class ClientInfo(tk.Frame):
 
         #label bellow main label
         selection_label = tk.Label(self,
-                                   text='Оберіть клієнта:',
+                                   text='Оберіть номер клієнта:',
                                    font=('dejavu sans mono',20),
                                    bg='#BDBDBD',
                                    fg='white',
