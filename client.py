@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+from labels_buttons import *
 
 class ClientForm(tk.Frame):
 
@@ -41,12 +42,6 @@ class ClientForm(tk.Frame):
         entry_frame = tk.Frame(self, bg='#F5F5F5')
         entry_frame.pack(fill='both', expand=True)
 
-        label_args = {'font' : ('dejavu sans mono', 10),
-                      'bg' : '#F5F5F5',
-                      'width' : 20,
-                      'fg' : '#212121',
-                      'anchor' : 'w'}
-
         #last name label and entry
         label_lastname = tk.Label(entry_frame, label_args, text='Прізвище:*')
         label_lastname.grid(row=0, column=0)
@@ -86,14 +81,6 @@ class ClientForm(tk.Frame):
         #phone error label
         self.phone_error = tk.Label(entry_frame, label_args)
         self.phone_error.grid(row=7, column=1)
-
-        button_args = {'bg' : '#7C4DFF',
-                        'border': 0,
-                        'fg' : 'white',
-                        'width' : 20,
-                        'height' : 2,
-                        'font' : ('dejavu sans mono',10)
-                        }
 
         #submit button
         submit_button= tk.Button(entry_frame,
@@ -291,14 +278,6 @@ class ClientInfo(tk.Frame):
         #covering frame to cover buttons
         self.cover_frame = tk.Frame(left_frame, bg='#F5F5F5')
         self.cover_frame.grid(row=0, column=0, sticky='wsne')
-
-        button_args = {'bg' : '#7C4DFF',
-                        'border': 0,
-                        'fg' : 'white',
-                        'width' : 20,
-                        'height' : 2,
-                        'font' : ('dejavu sans mono',10)
-                        }
 
         edit_button = tk.Button(self.button_frame,
                                 button_args,

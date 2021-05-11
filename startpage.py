@@ -1,4 +1,5 @@
 import tkinter as tk
+from labels_buttons import *
 class StartPage(tk.Frame):
 
     def __init__(self, parent, controller, **kwargs):
@@ -39,13 +40,6 @@ class StartPage(tk.Frame):
         button_frame = tk.Frame(self, bg='#F5F5F5')
         button_frame.pack(fill='both', expand=True)
 
-        button_args = {'bg' : '#7C4DFF',
-                        'border': 0,
-                        'fg' : 'white',
-                        'width' : 30,
-                        'height' : 2,
-                        'font' : ('dejavu sans mono',10)
-                        }
         #client button
         button_client = tk.Button(button_frame,
                                   button_args,
