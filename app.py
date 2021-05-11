@@ -48,6 +48,7 @@ class MyApp(tk.Tk):
     def show_frame(self, page_name):
         '''Show a frame for the given page name'''
         frame = self.frames[page_name]
+        frame.update_data()
         frame.tkraise()
 
 if __name__ == "__main__":

@@ -206,6 +206,9 @@ class ClientForm(tk.Frame):
         cur.execute('SELECT EXISTS(SELECT 1 FROM clients WHERE phone = %s);', [phone])
         return cur.fetchone()[0]
 
+    def update_data(self):
+        pass
+
 class ClientInfo(tk.Frame):
 
     def __init__(self, parent, controller, conn, **kwargs):
@@ -283,7 +286,7 @@ class ClientInfo(tk.Frame):
         #return to menu button
         back_button= tk.Button(bottom_frame,
                                button_args,
-                               command=lambda:controller.show_frame('StartPage'),
+                               command=lambda:self.return_clicked(),
                                text='Повернутись до меню')
         back_button.pack(side='left', pady=20)
 
@@ -294,12 +297,30 @@ class ClientInfo(tk.Frame):
         self.text_info = tk.Text(text_frame, state='disabled', height=4, font=('dejavu sans mono', 12))
         self.text_info.grid(row=0, column=1, padx=10, pady=10)
 
-        phone_list = self.get_phone_list()
-        self.phone_listbox = tk.Listbox(text_frame, height=len(phone_list), selectmode='single', font=('dejavu sans mono', 12))
-        for phone in phone_list:
-            self.phone_listbox.insert(tk.END, phone)
+        self.phone_listbox = tk.Listbox(text_frame,
+                                        selectmode='single',
+                                        font=('dejavu sans mono', 12))
         self.phone_listbox.grid(row=0, column=0, padx=10, pady=10)
         self.phone_listbox.bind('<<ListboxSelect>>', lambda x : self.phone_listbox_selected())
+
+        self.update_data()
+
+    def delete_text(self):
+        self.text_info.config(state='normal')
+        self.text_info.delete(1.0, tk.END)
+        self.text_info.config(state='disabled')
+
+    def return_clicked(self):
+        self.controller.show_frame('StartPage')
+        self.delete_text()
+        self.cover_frame.tkraise()
+
+    def update_data(self):
+        self.phone_listbox.delete(0, tk.END)
+        phone_list = self.get_phone_list()
+        self.phone_listbox.config(height=len(phone_list))
+        for phone in phone_list:
+            self.phone_listbox.insert(tk.END, phone)
 
     def delete_client(self):
         answer = tk.messagebox.askyesno(title='Увага!',
@@ -315,6 +336,7 @@ class ClientInfo(tk.Frame):
             cur.close()
 
             self.phone_listbox.delete(selected)
+            self.delete_text()
 
 
     def phone_listbox_selected(self):

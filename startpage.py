@@ -90,3 +90,6 @@ class StartPage(tk.Frame):
                                   command=lambda:controller.show_frame('RequestsPage'),
                                   text='Запити')
         button_requests.grid(row=6, column=0, pady=5)
+
+    def update_data(self):
+        pass
