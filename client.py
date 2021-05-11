@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 
 class ClientForm(tk.Frame):
 
@@ -244,9 +245,17 @@ class ClientInfo(tk.Frame):
         middle_frame = tk.Frame(self, bg='#F5F5F5')
         middle_frame.pack(fill='both', expand=True)
 
-        #frame for buttons
-        button_frame = tk.Frame(middle_frame, bg='#F5F5F5')
-        button_frame.pack(fill='both', side='left', expand=True)
+        #frame for containing button and covering frame
+        left_frame = tk.Frame(middle_frame, bg='#F5F5F5')
+        left_frame.pack(fill='both', side='left', expand=True)
+
+        #button frame
+        self.button_frame = tk.Frame(left_frame, bg='#F5F5F5')
+        self.button_frame.grid(row=0, column=0, sticky='wsne')
+
+        #covering frame to cover buttons
+        self.cover_frame = tk.Frame(left_frame, bg='#F5F5F5')
+        self.cover_frame.grid(row=0, column=0, sticky='wsne')
 
         button_args = {'bg' : '#7C4DFF',
                         'border': 0,
@@ -256,13 +265,14 @@ class ClientInfo(tk.Frame):
                         'font' : ('dejavu sans mono',10)
                         }
 
-        edit_button = tk.Button(button_frame,
+        edit_button = tk.Button(self.button_frame,
                                 button_args,
                                 text='Редагувати')
         edit_button.grid(row=0, column=0, pady=5)
 
-        delete_button = tk.Button(button_frame,
+        delete_button = tk.Button(self.button_frame,
                                   button_args,
+                                  command=lambda: self.delete_client(),
                                   text='Видалили')
         delete_button.grid(row=1, column=0, pady=5)
 
@@ -289,8 +299,27 @@ class ClientInfo(tk.Frame):
         for phone in phone_list:
             self.phone_listbox.insert(tk.END, phone)
         self.phone_listbox.grid(row=0, column=0, padx=10, pady=10)
-        self.phone_listbox.bind('<<ListboxSelect>>', lambda x : self.update_text_info())
+        self.phone_listbox.bind('<<ListboxSelect>>', lambda x : self.phone_listbox_selected())
 
+    def delete_client(self):
+        answer = tk.messagebox.askyesno(title='Увага!',
+                                        message='Це видалить клієнта, його замовлення та деталі замовлень. Продовити?')
+        if answer:
+            cur = self.conn.cursor()
+
+            selected = self.phone_listbox.curselection()
+            phone = self.phone_listbox.get(selected)
+
+            cur.execute('DELETE FROM clients WHERE phone = %s', [phone])
+            self.conn.commit()
+            cur.close()
+
+            self.phone_listbox.delete(selected)
+
+
+    def phone_listbox_selected(self):
+        self.button_frame.tkraise()
+        self.update_text_info()
 
     def update_text_info(self):
         text = ''
