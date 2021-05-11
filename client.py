@@ -3,6 +3,7 @@ from tkinter import messagebox
 
 class ClientForm(tk.Frame):
 
+    editmode = False
     def __init__(self, parent, controller, conn, **kwargs):
         tk.Frame.__init__(self, parent)
         self.controller = controller
@@ -111,6 +112,22 @@ class ClientForm(tk.Frame):
                                   text='Повернутись до меню')
         back_button.grid(row=9, column=0, pady=20)
 
+    def get_client_info(self, phone):
+        cur = self.conn.cursor()
+        cur.execute('SELECT * FROM clients WHERE phone = %s', [phone])
+        res = cur.fetchone()
+        cur.close()
+        return res
+
+    def edit_mode(self, phone):
+        (phone, lastname, firstname, middlename) = self.get_client_info(phone)
+        self.lastname.insert(0, lastname)
+        self.firstname.insert(0, firstname)
+        self.middlename.insert(0, middlename)
+        self.phone.insert(0, phone)
+        self.phone.config(state='disabled')
+        self.editmode = True
+
     def return_clicked(self):
         self.controller.show_frame('StartPage')
         self.clear_entries()
@@ -132,8 +149,15 @@ class ClientForm(tk.Frame):
         phone = self.phone.get()
 
         cur = self.conn.cursor()
-        cur.execute('''INSERT INTO clients (lastname, firstname, middlename, phone)
-                    VALUES ( %s, %s, %s, %s );''',
+        if not self.editmode:
+            command = '''INSERT INTO clients (lastname, firstname, middlename, phone)
+                    VALUES ( %s, %s, %s, %s );'''
+        else:
+            command = '''UPDATE clients SET lastname = %s, firstname = %s, middlename = %s
+                        WHERE phone = %s;'''
+            self.phone.config(state='normal')
+            self.editmode = False
+        cur.execute(command,
                     (lastname, firstname, middlename, phone))
         self.conn.commit()
         cur.close()
@@ -189,6 +213,8 @@ class ClientForm(tk.Frame):
 
     def validate_phone(self):
         phone = self.phone.get()
+        if self.editmode:
+            return True
         is_ok = False
         message = ''
         if(not phone):
@@ -276,6 +302,7 @@ class ClientInfo(tk.Frame):
 
         edit_button = tk.Button(self.button_frame,
                                 button_args,
+                                command=lambda: self.call_edit(),
                                 text='Редагувати')
         edit_button.grid(row=0, column=0, pady=5)
 
@@ -310,6 +337,13 @@ class ClientInfo(tk.Frame):
         self.phone_listbox.bind('<<ListboxSelect>>', lambda x : self.phone_listbox_selected())
 
         self.update_data()
+
+    def call_edit(self):
+        selected = self.phone_listbox.curselection()
+        phone = self.phone_listbox.get(selected)
+        self.controller.show_frame('ClientForm', phone)
+        self.delete_text()
+        self.cover_frame.tkraise()
 
     def delete_text(self):
         self.text_info.config(state='normal')

@@ -45,10 +45,12 @@ class MyApp(tk.Tk):
 
         self.show_frame("StartPage")
 
-    def show_frame(self, page_name):
+    def show_frame(self, page_name, pk=''):
         '''Show a frame for the given page name'''
         frame = self.frames[page_name]
         frame.update_data()
+        if pk:
+            frame.edit_mode(pk)
         frame.tkraise()
 
 if __name__ == "__main__":
