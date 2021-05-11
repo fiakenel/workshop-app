@@ -22,7 +22,7 @@ class ClientForm(tk.Frame):
 
         #main label
         heading_label = tk.Label(top_frame,
-                                 text=' Додати клієнта',
+                                 text=' Форма клієнта',
                                  font=('dejavu sans mono',40),
                                  pady=15,
                                  fg='#212121',
