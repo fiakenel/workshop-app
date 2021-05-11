@@ -107,9 +107,19 @@ class ClientForm(tk.Frame):
         #return to menu button
         back_button= tk.Button(entry_frame,
                                   button_args,
-                                  command=lambda:controller.show_frame('StartPage'),
+                                  command=lambda:self.return_clicked(),
                                   text='Повернутись до меню')
         back_button.grid(row=9, column=0, pady=20)
+
+    def return_clicked(self):
+        self.controller.show_frame('StartPage')
+        self.clear_entries()
+
+    def clear_entries(self):
+        self.firstname.delete(0, 'end')
+        self.lastname.delete(0, 'end')
+        self.middlename.delete(0, 'end')
+        self.phone.delete(0, 'end')
 
     def submit(self):
         self.submit_label.config(text='')
@@ -128,11 +138,7 @@ class ClientForm(tk.Frame):
         self.conn.commit()
         cur.close()
 
-        self.firstname.delete(0, 'end')
-        self.lastname.delete(0, 'end')
-        self.middlename.delete(0, 'end')
-        self.phone.delete(0, 'end')
-
+        self.clear_entries()
         self.submit_label.config(fg='green', text='Успішно збережено!')
 
     def validate_firstname(self):
