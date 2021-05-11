@@ -102,6 +102,8 @@ class ClientForm(tk.Frame):
         #submit label
         self.submit_label = tk.Label(entry_frame, label_args)
         self.submit_label.grid(row=8, column=1)
+
+        #return to menu button
         back_button= tk.Button(entry_frame,
                                   button_args,
                                   command=lambda:controller.show_frame('StartPage'),
@@ -209,3 +211,110 @@ class ClientInfo(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.conn = conn
+
+        # Top frame for main label and icon
+        top_frame = tk.Frame(self, borderwidth=10, bg='#9E9E9E')
+        top_frame.pack(fill='x', side='top')
+
+        #icon
+        icon = tk.PhotoImage(file='spanner.png')
+        icon_label = tk.Label(top_frame, image=icon, bg='#9E9E9E')
+        icon_label.pack(side='left')
+        icon_label.image = icon
+
+        #main label
+        heading_label = tk.Label(top_frame,
+                                 text=' Інформація про клієнтів',
+                                 font=('dejavu sans mono',40),
+                                 pady=15,
+                                 fg='#212121',
+                                 bg='#9E9E9E')
+        heading_label.pack()
+
+        #label bellow main label
+        selection_label = tk.Label(self,
+                                   text='Оберіть клієнта:',
+                                   font=('dejavu sans mono',20),
+                                   bg='#BDBDBD',
+                                   fg='white',
+                                   anchor='w')
+        selection_label.pack(fill='x')
+
+        #middle frame
+        middle_frame = tk.Frame(self, bg='#F5F5F5')
+        middle_frame.pack(fill='both', expand=True)
+
+        #frame for buttons
+        button_frame = tk.Frame(middle_frame, bg='#F5F5F5')
+        button_frame.pack(fill='both', side='left', expand=True)
+
+        button_args = {'bg' : '#7C4DFF',
+                        'border': 0,
+                        'fg' : 'white',
+                        'width' : 20,
+                        'height' : 2,
+                        'font' : ('dejavu sans mono',10)
+                        }
+
+        edit_button = tk.Button(button_frame,
+                                button_args,
+                                text='Редагувати')
+        edit_button.grid(row=0, column=0, pady=5)
+
+        delete_button = tk.Button(button_frame,
+                                  button_args,
+                                  text='Видалили')
+        delete_button.grid(row=1, column=0, pady=5)
+
+        #bottom frame for return button
+        bottom_frame = tk.Frame(self, bg='#F5F5F5')
+        bottom_frame.pack(side='bottom', fill='x',)
+
+        #return to menu button
+        back_button= tk.Button(bottom_frame,
+                               button_args,
+                               command=lambda:controller.show_frame('StartPage'),
+                               text='Повернутись до меню')
+        back_button.pack(side='left', pady=20)
+
+        #frame for text and listbox
+        text_frame = tk.Frame(middle_frame, bg='#F5F5F5')
+        text_frame.pack(fill='both', side='right', expand=True)
+
+        self.text_info = tk.Text(text_frame, state='disabled', height=4, font=('dejavu sans mono', 12))
+        self.text_info.grid(row=0, column=1, padx=10, pady=10)
+
+        phone_list = self.get_phone_list()
+        self.phone_listbox = tk.Listbox(text_frame, height=len(phone_list), selectmode='single', font=('dejavu sans mono', 12))
+        for phone in phone_list:
+            self.phone_listbox.insert(tk.END, phone)
+        self.phone_listbox.grid(row=0, column=0, padx=10, pady=10)
+        self.phone_listbox.bind('<<ListboxSelect>>', lambda x : self.update_text_info())
+
+
+    def update_text_info(self):
+        text = ''
+        selected = self.phone_listbox.curselection()
+        if selected:
+            phone = self.phone_listbox.get(selected)
+            (phone, lastname, firstname, middlename) = self.get_client_info(phone)
+            text = f"Телефон: {phone}\nПрізвище: {lastname}\nІм'я: {firstname}\nПо батькові: {middlename}"
+
+        self.text_info.config(state='normal')
+        self.text_info.delete(1.0, tk.END)
+        self.text_info.insert(tk.INSERT, text)
+        self.text_info.config(state='disabled')
+
+    def get_client_info(self, phone):
+        cur = self.conn.cursor()
+        cur.execute('SELECT * FROM clients WHERE phone = %s', [phone])
+        res = cur.fetchone()
+        cur.close()
+        return res
+
+    def get_phone_list(self):
+        cur = self.conn.cursor()
+        cur.execute('SELECT phone FROM clients;')
+        res = [i[0] for i in cur.fetchall()]
+        cur.close()
+        return res
