@@ -1,10 +1,10 @@
 import tkinter as tk
 class StartPage(tk.Frame):
 
-    def __init__(self, parent, controller):
+    def __init__(self, parent, controller, **kwargs):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        self.controller.title('Майстерня "у Івана"')
+        self.controller.title('Майстерня "ПрацівничОк"')
         self.controller.iconphoto(False, tk.PhotoImage(file='spanner.png'))
 
         # Top frame for main label and icon
@@ -19,7 +19,7 @@ class StartPage(tk.Frame):
 
         #main label
         heading_label = tk.Label(top_frame,
-                                 text=' Майстерня "у Івана"',
+                                 text=' Майстерня "ПрацівничОк"',
                                  font=('dejavu sans mono',40),
                                  pady=15,
                                  fg='#212121',

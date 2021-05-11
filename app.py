@@ -1,10 +1,11 @@
 import tkinter as tk
 from startpage import *
 from client import *
+import psycopg2
 
 class MyApp(tk.Tk):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, conn, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
 
         # the container is where we'll stack a bunch of frames
@@ -34,7 +35,7 @@ class MyApp(tk.Tk):
         self.frames = {}
         for F in (StartPage, ClientForm):
             page_name = F.__name__
-            frame = F(parent=container, controller=self)
+            frame = F(parent=container, controller=self, conn=conn)
             self.frames[page_name] = frame
 
             # put all of the pages in the same location;
@@ -57,5 +58,13 @@ class OrderForm(tk.Frame):
 
 
 if __name__ == "__main__":
-    app = MyApp()
+    conn = psycopg2.connect(host='localhost',
+                            port=5432,
+                            database='workshop',
+                            user='maksym',
+                            password='')
+
+    app = MyApp(conn)
     app.mainloop()
+
+    conn.close()
