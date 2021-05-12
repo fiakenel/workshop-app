@@ -46,30 +46,32 @@ class ClientForm(tk.Frame):
         label_lastname = tk.Label(entry_frame, label_args, text='Прізвище:*')
         label_lastname.grid(row=0, column=0)
         #last name entry
-        self.lastname = tk.Entry(entry_frame)
+        self.lastname = tk.Entry(entry_frame, validate='all',
+                                 validatecommand=(entry_frame.register(self.validate_lastname), '%i', '%V', '%S', '%P'))
         self.lastname.grid(row=1, column=0)
         #last name error label
-        self.lastname_error = tk.Label(entry_frame, label_args)
+        self.lastname_error = tk.Message(entry_frame, message_args, width=600)
         self.lastname_error.grid(row=1, column=1)
 
         #first name label
-        label_firstname = tk.Label(entry_frame, label_args, text='Ім\'я:*')
-        label_firstname.grid(row=2, column=0)
+        tk.Label(entry_frame, label_args, text='Ім\'я:*').grid(row=2, column=0)
         #first name entry
-        self.firstname = tk.Entry(entry_frame)
+        self.firstname = tk.Entry(entry_frame, validate='all',
+                                 validatecommand=(entry_frame.register(self.validate_firstname), '%i', '%V', '%S', '%P'))
         self.firstname.grid(row=3, column=0)
         #first mane error label
-        self.firstname_error = tk.Label(entry_frame, label_args)
+        self.firstname_error = tk.Message(entry_frame, message_args, width=600)
         self.firstname_error.grid(row=3, column=1)
 
         #middle name label
         label_middlename = tk.Label(entry_frame, label_args, text='По батькові:')
         label_middlename.grid(row=4, column=0)
         #middle name entry
-        self.middlename = tk.Entry(entry_frame)
+        self.middlename = tk.Entry(entry_frame, validate='all',
+                                   validatecommand=(entry_frame.register(self.validate_middlename), '%i', '%V', '%S', '%P'))
         self.middlename.grid(row=5, column=0)
         #middle name error label
-        self.middlename_error = tk.Label(entry_frame, label_args)
+        self.middlename_error = tk.Message(entry_frame, message_args, width=600)
         self.middlename_error.grid(row=5, column=1)
 
         #phone label
@@ -83,11 +85,11 @@ class ClientForm(tk.Frame):
         self.phone_error.grid(row=7, column=1)
 
         #submit button
-        submit_button= tk.Button(entry_frame,
-                                  button_args,
-                                  command=lambda:self.submit(),
-                                  text='Зберегти')
-        submit_button.grid(row=8, column=0, pady=10)
+        self.submit_button= tk.Button(entry_frame,
+                                      button_args,
+                                      command=lambda:self.submit(),
+                                      text='Зберегти')
+        self.submit_button.grid(row=8, column=0, pady=10)
         #submit label
         self.submit_label = tk.Label(entry_frame, label_args)
         self.submit_label.grid(row=8, column=1)
@@ -99,6 +101,123 @@ class ClientForm(tk.Frame):
                                   text='Повернутись до меню')
         back_button.grid(row=9, column=0, pady=20)
 
+    def validate_lastname(self, index, action, text, res):
+        if action == 'key' and index == '50': #last name len is grater than 50
+            self.lastname_error.config(text='Ваше прізвище занадто довге')
+            return False
+        elif action == 'key' and not text.isalpha(): #last name contains of not letters
+            self.lastname_error.config(text='Дозволені лише літери')
+            return False
+        elif action == 'focusout' and (index == '-1' or index == '0' )and res == '': #entry is empty
+            self.lastname_error.config(text='Поле не може бути порожнім!')
+            return False
+        else:
+            self.lastname_error.config(text='')
+            return True
+
+    def validate_firstname(self, index, action, text, res):
+        if action == 'key' and index == '50': #first name len is grater than 50
+            self.firstname_error.config(text='Ваше ім\'я занадто довге')
+            return False
+        elif action == 'key' and not text.isalpha(): #first name contains of not letters
+            self.firstname_error.config(text='Дозволені лише літери')
+            return False
+        elif action == 'focusout' and (index == '-1' or index == '0') and res == '': #entry is empty
+            self.firstname_error.config(text='Поле не може бути порожнім!')
+            return False
+        else:
+            self.firstname_error.config(text='')
+            return True
+
+    def validate_middlename(self, index, action, text, res):
+        if action == 'key' and index == '50': #middle name len is grater than 50
+            self.middlename_error.config(text='Ваше по батькові занадто довге')
+            return False
+        elif action == 'key' and not text.isalpha(): #middle name contains of not letters
+            self.middlename_error.config(text='Дозволені лише літери')
+            return False
+        else:
+            self.middlename_error.config(text='')
+            return True
+
+    def validate_phone(self, index, action, text, res):
+        if action == 'key' and index == '10': #middle name len is grater than 50
+            self.middlename_error.config(text='Ваше по батькові занадто довге')
+            return False
+        elif action == 'key' and not text.isdecimal(): #middle name contains of not digits
+            self.middlename_error.config(text='Дозволені лише літери')
+            return False
+        else:
+            self.middlename_error.config(text='')
+            return True
+#    def validate_firstname(self):
+#        firstname = self.firstname.get()
+#        is_ok = False
+#        message = ''
+#        if(not firstname):
+#            message = 'Введіть ім\'я'
+#        elif(len(firstname) > 50):
+#            message = 'Ваше ім\'я занадто довге'
+#        elif(not firstname.isalpha()):
+#            message = 'Дозволені лише літери'
+#        else:
+#            is_ok = True
+#
+#        self.firstname_error.config(text=message, fg='red', width=len(message))
+#        return is_ok
+#
+#    def validate_lastname(self):
+#        lastname = self.lastname.get()
+#        is_ok = False
+#        message = ''
+#        if(not lastname):
+#            message = 'Введіть прізвище'
+#        elif(len(lastname) > 50):
+#            message = 'Ваше прізвище занадто довге'
+#        elif(not lastname.isalpha()):
+#            message = 'Дозволені лише літери'
+#        else:
+#            is_ok = True
+#
+#        self.lastname_error.config(text=message, fg='red', width=len(message))
+#        return is_ok
+#
+#    def validate_middlename(self):
+#        middlename = self.middlename.get()
+#        is_ok = False
+#        message = ''
+#        if(len(middlename) > 50):
+#            message = 'Ваше по батькові занадто довге'
+#        elif(not middlename.isalpha() and len(middlename) != 0):
+#            message = 'Дозволені лише літери'
+#        else:
+#            is_ok = True
+#
+#        self.middlename_error.config(text=message, fg='red', width=len(message))
+#        return is_ok
+#
+#    def validate_phone(self):
+#        phone = self.phone.get()
+#        if self.editmode:
+#            return True
+#        is_ok = False
+#        message = ''
+#        if(not phone):
+#            message = 'Введіть номер'
+#        elif(len(phone) > 10):
+#            message = 'Ваш телефон занадто довгий'
+#        elif(len(phone) < 4):
+#            message = 'Ваш телефон занадто короткий'
+#        elif(not phone.isdecimal()):
+#            message = 'Дозволені лише числа'
+#        elif(self.has_phone(phone)):
+#            message = 'Клієнт з таким номером вже існує'
+#        else:
+#            is_ok = True
+#
+#        self.phone_error.config(text=message, fg='red', width=len(message))
+#        return is_ok
+#
     def get_client_info(self, phone):
         cur = self.conn.cursor()
         cur.execute('SELECT * FROM clients WHERE phone = %s', [phone])
@@ -154,73 +273,7 @@ class ClientForm(tk.Frame):
         self.clear_entries()
         self.submit_label.config(fg='green', text='Успішно збережено!')
 
-    def validate_firstname(self):
-        firstname = self.firstname.get()
-        is_ok = False
-        message = ''
-        if(not firstname):
-            message = 'Введіть ім\'я'
-        elif(len(firstname) > 50):
-            message = 'Ваше ім\'я занадто довге'
-        elif(not firstname.isalpha()):
-            message = 'Дозволені лише літери'
-        else:
-            is_ok = True
 
-        self.firstname_error.config(text=message, fg='red', width=len(message))
-        return is_ok
-
-    def validate_lastname(self):
-        lastname = self.lastname.get()
-        is_ok = False
-        message = ''
-        if(not lastname):
-            message = 'Введіть прізвище'
-        elif(len(lastname) > 50):
-            message = 'Ваше прізвище занадто довге'
-        elif(not lastname.isalpha()):
-            message = 'Дозволені лише літери'
-        else:
-            is_ok = True
-
-        self.lastname_error.config(text=message, fg='red', width=len(message))
-        return is_ok
-
-    def validate_middlename(self):
-        middlename = self.middlename.get()
-        is_ok = False
-        message = ''
-        if(len(middlename) > 50):
-            message = 'Ваше по батькові занадто довге'
-        elif(not middlename.isalpha() and len(middlename) != 0):
-            message = 'Дозволені лише літери'
-        else:
-            is_ok = True
-
-        self.middlename_error.config(text=message, fg='red', width=len(message))
-        return is_ok
-
-    def validate_phone(self):
-        phone = self.phone.get()
-        if self.editmode:
-            return True
-        is_ok = False
-        message = ''
-        if(not phone):
-            message = 'Введіть номер'
-        elif(len(phone) > 10):
-            message = 'Ваш телефон занадто довгий'
-        elif(len(phone) < 4):
-            message = 'Ваш телефон занадто короткий'
-        elif(not phone.isdecimal()):
-            message = 'Дозволені лише числа'
-        elif(self.has_phone(phone)):
-            message = 'Клієнт з таким номером вже існує'
-        else:
-            is_ok = True
-
-        self.phone_error.config(text=message, fg='red', width=len(message))
-        return is_ok
 
     def has_phone(self, phone):
         cur = self.conn.cursor()
