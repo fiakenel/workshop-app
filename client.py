@@ -78,10 +78,11 @@ class ClientForm(tk.Frame):
         label_phone = tk.Label(entry_frame, label_args, text='Телефон:*')
         label_phone.grid(row=6, column=0)
         #phone entry
-        self.phone = tk.Entry(entry_frame)
+        self.phone = tk.Entry(entry_frame, validate='all',
+                              validatecommand=(entry_frame.register(self.validate_phone), '%i', '%V', '%S', '%P'))
         self.phone.grid(row=7, column=0)
         #phone error label
-        self.phone_error = tk.Label(entry_frame, label_args)
+        self.phone_error = tk.Message(entry_frame, message_args, width=600)
         self.phone_error.grid(row=7, column=1)
 
         #submit button
@@ -141,14 +142,20 @@ class ClientForm(tk.Frame):
             return True
 
     def validate_phone(self, index, action, text, res):
-        if action == 'key' and index == '10': #middle name len is grater than 50
-            self.middlename_error.config(text='Ваше по батькові занадто довге')
+        if action == 'key' and index == '10': #phone len is grater than 10
+            self.phone_error.config(text='Номер занадто довгий')
             return False
         elif action == 'key' and not text.isdecimal(): #middle name contains of not digits
-            self.middlename_error.config(text='Дозволені лише літери')
+            self.phone_error.config(text='Дозволені лише числа')
+            return False
+        elif action == 'focusout' and (index == '-1' or index == '0') and res == '': #entry is empty
+            self.phone_error.config(text='Поле не може бути порожнім!')
+            return False
+        elif action == 'focusout' and self.has_phone(res):
+            self.phone_error.config(text='Клієнт з таким номером вже існує')
             return False
         else:
-            self.middlename_error.config(text='')
+            self.phone_error.config(text='')
             return True
 #    def validate_firstname(self):
 #        firstname = self.firstname.get()
