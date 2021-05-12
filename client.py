@@ -157,74 +157,7 @@ class ClientForm(tk.Frame):
         else:
             self.phone_error.config(text='')
             return True
-#    def validate_firstname(self):
-#        firstname = self.firstname.get()
-#        is_ok = False
-#        message = ''
-#        if(not firstname):
-#            message = 'Введіть ім\'я'
-#        elif(len(firstname) > 50):
-#            message = 'Ваше ім\'я занадто довге'
-#        elif(not firstname.isalpha()):
-#            message = 'Дозволені лише літери'
-#        else:
-#            is_ok = True
-#
-#        self.firstname_error.config(text=message, fg='red', width=len(message))
-#        return is_ok
-#
-#    def validate_lastname(self):
-#        lastname = self.lastname.get()
-#        is_ok = False
-#        message = ''
-#        if(not lastname):
-#            message = 'Введіть прізвище'
-#        elif(len(lastname) > 50):
-#            message = 'Ваше прізвище занадто довге'
-#        elif(not lastname.isalpha()):
-#            message = 'Дозволені лише літери'
-#        else:
-#            is_ok = True
-#
-#        self.lastname_error.config(text=message, fg='red', width=len(message))
-#        return is_ok
-#
-#    def validate_middlename(self):
-#        middlename = self.middlename.get()
-#        is_ok = False
-#        message = ''
-#        if(len(middlename) > 50):
-#            message = 'Ваше по батькові занадто довге'
-#        elif(not middlename.isalpha() and len(middlename) != 0):
-#            message = 'Дозволені лише літери'
-#        else:
-#            is_ok = True
-#
-#        self.middlename_error.config(text=message, fg='red', width=len(message))
-#        return is_ok
-#
-#    def validate_phone(self):
-#        phone = self.phone.get()
-#        if self.editmode:
-#            return True
-#        is_ok = False
-#        message = ''
-#        if(not phone):
-#            message = 'Введіть номер'
-#        elif(len(phone) > 10):
-#            message = 'Ваш телефон занадто довгий'
-#        elif(len(phone) < 4):
-#            message = 'Ваш телефон занадто короткий'
-#        elif(not phone.isdecimal()):
-#            message = 'Дозволені лише числа'
-#        elif(self.has_phone(phone)):
-#            message = 'Клієнт з таким номером вже існує'
-#        else:
-#            is_ok = True
-#
-#        self.phone_error.config(text=message, fg='red', width=len(message))
-#        return is_ok
-#
+
     def get_client_info(self, phone):
         cur = self.conn.cursor()
         cur.execute('SELECT * FROM clients WHERE phone = %s', [phone])
@@ -255,14 +188,13 @@ class ClientForm(tk.Frame):
 
     def submit(self):
         self.submit_label.config(text='')
-        if not all([self.validate_firstname(), self.validate_lastname(), self.validate_middlename(), self.validate_phone()]):
-            return
-
         firstname = self.firstname.get()
         lastname = self.lastname.get()
         middlename = self.middlename.get()
         phone = self.phone.get()
-
+        if not all([firstname, lastname, phone]):
+            self.submit_label.config(fg='red', text='Деякі поля порожні')
+            return
         cur = self.conn.cursor()
         if not self.editmode:
             command = '''INSERT INTO clients (lastname, firstname, middlename, phone)
@@ -276,11 +208,8 @@ class ClientForm(tk.Frame):
                     (lastname, firstname, middlename, phone))
         self.conn.commit()
         cur.close()
-
         self.clear_entries()
         self.submit_label.config(fg='green', text='Успішно збережено!')
-
-
 
     def has_phone(self, phone):
         cur = self.conn.cursor()
