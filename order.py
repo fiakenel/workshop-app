@@ -1,8 +1,9 @@
+import datetime
 import tkinter as tk
 from tkinter import messagebox
-from presets_forms import *
 from tkcalendar import Calendar, DateEntry
 from tkinter import ttk
+from presets_forms import *
 
 class OrderForm(tk.Frame):
 
@@ -57,12 +58,12 @@ class OrderForm(tk.Frame):
         label_date = tk.Label(entry_frame, label_args, text='Дата:*')
         label_date.grid(row=2, column=0)
         #date entry
-        self.date = DateEntry(entry_frame, width=12, background='#7C4DFF',
-                        foreground='white', borderwidth=2)
+        self.date = DateEntry(entry_frame,
+                              background='#7C4DFF',
+                              maxdate=datetime.datetime.now(),
+                              locale='uk',
+                              selectbackground='#7C4DFF')
         self.date.grid(row=3, column=0)
-        #date error label
-        self.date_error = tk.Label(entry_frame, label_args)
-        self.date_error.grid(row=3, column=2)
 
         #time label
         label_time = tk.Label(entry_frame, label_args, text='Час:*')
