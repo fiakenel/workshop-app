@@ -151,7 +151,7 @@ class ClientForm(tk.Frame):
         elif action == 'focusout' and (index == '-1' or index == '0') and res == '': #entry is empty
             self.phone_error.config(text='Поле не може бути порожнім!')
             return False
-        elif action == 'focusout' and self.has_phone(res):
+        elif action == 'key' and self.has_phone(res):
             self.phone_error.config(text='Клієнт з таким номером вже існує')
             return False
         else:
