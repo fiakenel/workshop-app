@@ -3,15 +3,16 @@ import psycopg2
 from startpage import *
 from client import *
 from order import *
+from details import *
+from pricelist import *
+from master import *
+from requests import *
 
 class MyApp(tk.Tk):
 
     def __init__(self, conn, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
 
-        # the container is where we'll stack a bunch of frames
-        # on top of each other, then the one we want visible
-        # will be raised above the others
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
@@ -30,11 +31,11 @@ class MyApp(tk.Tk):
         add_menu.add_command(label='Вийти', command=self.quit)
 
         info_menu = tk.Menu(menu, tearoff=0)
-        menu.add_cascade(label='Інфо', menu=info_menu)
-        info_menu.add_command(label='Про нас')
+       # menu.add_cascade(label='Інфо', menu=info_menu)
+       # info_menu.add_command(label='Про нас')
 
         self.frames = {}
-        for F in (StartPage, ClientForm, ClientInfo, OrderForm):
+        for F in (StartPage, ClientForm, ClientInfo, OrderForm, OrderInfo, PricelistForm, PricelistInfo, MasterForm, MasterInfo, DetailsForm, DetailsInfo, RequestsPage):
             page_name = F.__name__
             frame = F(parent=container, controller=self, conn=conn)
             self.frames[page_name] = frame

@@ -5,7 +5,7 @@ class StartPage(tk.Frame):
     def __init__(self, parent, controller, **kwargs):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        self.controller.title('Майстерня "ПрацівничОк"')
+        self.controller.title('Майстерня')
         self.controller.iconphoto(False, tk.PhotoImage(file='spanner.png'))
 
         # Top frame for main label and icon
@@ -20,7 +20,7 @@ class StartPage(tk.Frame):
 
         #main label
         heading_label = tk.Label(top_frame,
-                                 text=' Майстерня "ПрацівничОк"',
+                                 text=' Майстерня',
                                  font=('dejavu sans mono',40),
                                  pady=15,
                                  fg='#212121',
@@ -72,7 +72,7 @@ class StartPage(tk.Frame):
         button_pricelist = tk.Button(button_frame,
                                   button_args,
                                   command=lambda:controller.show_frame('PricelistInfo'),
-                                  text='Прайс-листи')
+                                  text='Прайс-лист')
         button_pricelist.grid(row=3, column=0, pady=5)
 
         #master button
